@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# But don't ignore these files
+!clipboard_rotator.py
+!icon.ico
+
+# Don't ignore .gitignore itself
+!.gitignore
