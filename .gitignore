@@ -4,6 +4,7 @@
 # But don't ignore these files
 !clipboard_rotator.py
 !icon.ico
+!README.md
 
 # Don't ignore .gitignore itself
 !.gitignore
