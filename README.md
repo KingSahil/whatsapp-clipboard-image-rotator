@@ -11,7 +11,6 @@ A simple and lightweight desktop application that allows you to quickly rotate i
   - Rotate 180°
 - **Automatic Display**: Rotated images open automatically in your default image viewer
 - **Lightweight**: Simple GUI with minimal resource usage
-- **Cross-Platform**: Works on Windows, macOS, and Linux
 
 ## 🚀 Quick Start
 
