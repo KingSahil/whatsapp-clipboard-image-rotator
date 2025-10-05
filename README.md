@@ -1,6 +1,6 @@
 # WhatsApp Clipboard Image Rotator
 
-A lightweight desktop application that runs in your system tray, allowing you to instantly rotate images with global hotkeys - perfect for fixing those sideways photos before sharing them on WhatsApp or other platforms!
+A lightweight desktop application that runs in your system tray, allowing you to instantly rotate images with global hotkeys - perfect for fixing those sideways photos on WhatsApp or other platforms!
 
 ![Clipboard Rotator Screenshot](screenshot.png)
 
