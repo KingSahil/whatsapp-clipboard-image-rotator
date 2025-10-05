@@ -33,6 +33,26 @@ A lightweight desktop application that runs in your system tray, allowing you to
 
 **Note**: Run as administrator for global hotkeys to work system-wide.
 
+## ⚠️ Windows SmartScreen Warning
+
+When downloading or running the executable for the first time, Windows SmartScreen may show a warning: **"Rotator.exe isn't commonly downloaded"** or **"Windows protected your PC"**.
+
+**This is normal and the app is completely safe!** The warning appears because:
+- The app is not digitally signed (code signing certificates cost $100-400/year)
+- It's a relatively new application without widespread download reputation
+
+**To run the app safely:**
+1. Click **"More info"** or **"..." (three dots)**
+2. Click **"Run anyway"** or **"Keep"**
+3. The app will run normally
+
+**Why you can trust this app:**
+- ✅ Completely open-source - review all code in this repository
+- ✅ No network connections - works 100% offline
+- ✅ No data collection or telemetry
+- ✅ Simple functionality - just rotates clipboard images
+- ✅ Scan with your antivirus if you want extra assurance
+
 ### Running from Source
 
 #### Prerequisites
