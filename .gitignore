@@ -5,6 +5,7 @@
 !clipboard_rotator.py
 !icon.ico
 !README.md
+!screenshot.png
 
 # Don't ignore .gitignore itself
 !.gitignore
