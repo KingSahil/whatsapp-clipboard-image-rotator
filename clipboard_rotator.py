@@ -4,6 +4,22 @@ import tempfile
 import os
 import subprocess
 import sys
+import keyboard
+import time
+import pystray
+from PIL import Image as PILImage
+import threading
+
+def copy_and_rotate(angle):
+    """Simulate Ctrl+C then rotate the image"""
+    # Simulate Ctrl+C to copy selected content
+    keyboard.send('ctrl+c')
+    
+    # Wait a moment for clipboard to update
+    time.sleep(0.1)
+    
+    # Now rotate the image
+    rotate_and_show(angle)
 
 def get_clipboard_image():
     """Get image from clipboard with optimized imports"""
@@ -55,9 +71,51 @@ def rotate_and_show(angle):
     except Exception as e:
         messagebox.showerror("Error", f"Failed to rotate image: {str(e)}")
 
+# System tray functions
+def show_window(icon=None, item=None):
+    """Show the main window"""
+    root.deiconify()
+    root.lift()
+    root.focus_force()
+
+def hide_window():
+    """Hide the main window"""
+    root.withdraw()
+
+def quit_app(icon=None, item=None):
+    """Quit the application"""
+    keyboard.unhook_all()
+    if icon:
+        icon.stop()
+    root.quit()
+
+def create_tray_icon():
+    """Create system tray icon"""
+    # Create a simple icon image
+    icon_image = PILImage.new('RGB', (64, 64), color='blue')
+    
+    # Try to load icon.ico if it exists
+    icon_path = os.path.join(os.path.dirname(__file__), 'icon.ico')
+    if os.path.exists(icon_path):
+        try:
+            icon_image = PILImage.open(icon_path)
+        except:
+            pass
+    
+    menu = pystray.Menu(
+        pystray.MenuItem('Show Window', show_window, default=True),
+        pystray.MenuItem('Rotate Left (Ctrl+Shift+←)', lambda: copy_and_rotate(90)),
+        pystray.MenuItem('Rotate Right (Ctrl+Shift+→)', lambda: copy_and_rotate(-90)),
+        pystray.MenuItem('Rotate 180° (Ctrl+Shift+↓)', lambda: copy_and_rotate(180)),
+        pystray.MenuItem('Quit', quit_app)
+    )
+    
+    icon = pystray.Icon("clipboard_rotator", icon_image, "Clipboard Rotator", menu)
+    icon.run()
+
 root = tk.Tk()
 root.title("Clipboard Rotator")
-root.geometry("300x150")
+root.geometry("300x200")
 
 tk.Label(root, text="Copy an image → Click button → Instantly rotates").pack(pady=10)
 
@@ -72,5 +130,25 @@ btn_right.pack(side=tk.LEFT, padx=5)
 
 btn_180 = tk.Button(root, text="Rotate 180°", command=lambda: rotate_and_show(180))
 btn_180.pack(pady=5)
+
+tk.Label(root, text="Hotkeys: Ctrl+Shift+Arrow (auto-copies & rotates)", font=('Arial', 8)).pack(pady=5)
+
+btn_minimize = tk.Button(root, text="Minimize to Tray", command=hide_window)
+btn_minimize.pack(pady=5)
+
+# Handle window close button to minimize to tray instead of quitting
+root.protocol('WM_DELETE_WINDOW', hide_window)
+
+# Register global hotkeys that auto-copy then rotate
+keyboard.add_hotkey('ctrl+shift+left', lambda: copy_and_rotate(90))
+keyboard.add_hotkey('ctrl+shift+right', lambda: copy_and_rotate(-90))
+keyboard.add_hotkey('ctrl+shift+down', lambda: copy_and_rotate(180))
+
+# Start system tray icon in a separate thread
+tray_thread = threading.Thread(target=create_tray_icon, daemon=True)
+tray_thread.start()
+
+# Start minimized to tray
+root.withdraw()
 
 root.mainloop()
