@@ -9,6 +9,94 @@ import time
 import pystray
 from PIL import Image as PILImage
 import threading
+import winshell
+from win32com.client import Dispatch
+
+def get_startup_shortcut_path():
+    """Get the path to the startup shortcut"""
+    startup_folder = winshell.startup()
+    return os.path.join(startup_folder, "Clipboard Rotator.lnk")
+
+def get_executable_path():
+    """Get the path to the current executable or script"""
+    if getattr(sys, 'frozen', False):
+        # Running as compiled executable
+        return sys.executable
+    else:
+        # Running as script
+        return os.path.abspath(__file__)
+
+def is_autostart_enabled():
+    """Check if auto-start is enabled"""
+    return os.path.exists(get_startup_shortcut_path())
+
+def enable_autostart():
+    """Add application to Windows startup"""
+    try:
+        shortcut_path = get_startup_shortcut_path()
+        target_path = get_executable_path()
+        
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(shortcut_path)
+        shortcut.TargetPath = target_path
+        shortcut.WorkingDirectory = os.path.dirname(target_path)
+        shortcut.Description = "Clipboard Image Rotator with Global Hotkeys"
+        shortcut.save()
+        
+        messagebox.showinfo("Success", "Auto-start enabled!\n\nClipboard Rotator will start automatically when Windows boots.")
+        return True
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to enable auto-start:\n{str(e)}")
+        return False
+
+def disable_autostart():
+    """Remove application from Windows startup"""
+    try:
+        shortcut_path = get_startup_shortcut_path()
+        if os.path.exists(shortcut_path):
+            os.remove(shortcut_path)
+            messagebox.showinfo("Success", "Auto-start disabled.\n\nClipboard Rotator will not start automatically.")
+        else:
+            messagebox.showinfo("Info", "Auto-start was not enabled.")
+        return True
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to disable auto-start:\n{str(e)}")
+        return False
+
+def toggle_autostart():
+    """Toggle auto-start on/off"""
+    if is_autostart_enabled():
+        disable_autostart()
+    else:
+        enable_autostart()
+    update_autostart_button()
+
+def update_autostart_button():
+    """Update the auto-start button text"""
+    if is_autostart_enabled():
+        btn_autostart.config(text="✓ Auto-Start Enabled", bg="#90EE90")
+    else:
+        btn_autostart.config(text="Enable Auto-Start", bg="SystemButtonFace")
+
+def show_shortcuts_info():
+    """Show keyboard shortcuts information"""
+    info = """Keyboard Shortcuts:
+
+🔄 Rotation Shortcuts:
+• Ctrl+Shift+Left → Rotate Left (90°)
+• Ctrl+Shift+Right → Rotate Right (90°)
+• Ctrl+Shift+Down → Rotate 180°
+
+💡 How it works:
+1. Select or hover over any image
+2. Press the shortcut key
+3. Image is auto-copied & rotated!
+
+✨ Works system-wide - even when minimized!
+
+Note: Run as administrator for best results."""
+    
+    messagebox.showinfo("Keyboard Shortcuts", info)
 
 def copy_and_rotate(angle):
     """Simulate Ctrl+C then rotate the image"""
@@ -128,26 +216,41 @@ def create_tray_icon():
 
 root = tk.Tk()
 root.title("Clipboard Rotator")
-root.geometry("300x200")
+root.geometry("350x350")
 
-tk.Label(root, text="Copy an image → Click button → Instantly rotates").pack(pady=10)
+tk.Label(root, text="Clipboard Image Rotator", font=('Arial', 12, 'bold')).pack(pady=10)
 
+# Rotation buttons frame
 frame = tk.Frame(root)
 frame.pack(pady=5)
 
-btn_left = tk.Button(frame, text="Rotate Left", command=lambda: rotate_and_show(90))
+btn_left = tk.Button(frame, text="Rotate Left", command=lambda: rotate_and_show(90), width=12)
 btn_left.pack(side=tk.LEFT, padx=5)
 
-btn_right = tk.Button(frame, text="Rotate Right", command=lambda: rotate_and_show(-90))
+btn_right = tk.Button(frame, text="Rotate Right", command=lambda: rotate_and_show(-90), width=12)
 btn_right.pack(side=tk.LEFT, padx=5)
 
-btn_180 = tk.Button(root, text="Rotate 180°", command=lambda: rotate_and_show(180))
+btn_180 = tk.Button(root, text="Rotate 180°", command=lambda: rotate_and_show(180), width=25)
 btn_180.pack(pady=5)
 
-tk.Label(root, text="Hotkeys: Ctrl+Shift+Arrow (auto-copies & rotates)", font=('Arial', 8)).pack(pady=5)
+# Keyboard shortcuts info button
+btn_shortcuts = tk.Button(root, text="⌨ View Keyboard Shortcuts", command=show_shortcuts_info, 
+                          width=25, bg="#E3F2FD")
+btn_shortcuts.pack(pady=5)
 
-btn_minimize = tk.Button(root, text="Minimize to Tray", command=hide_window)
+# Auto-start button
+btn_autostart = tk.Button(root, text="Enable Auto-Start", command=toggle_autostart, width=25)
+btn_autostart.pack(pady=5)
+
+# Minimize to tray button
+btn_minimize = tk.Button(root, text="Minimize to Tray", command=hide_window, width=25)
 btn_minimize.pack(pady=5)
+
+# Status label
+tk.Label(root, text="App running in system tray", font=('Arial', 8), fg='gray').pack(pady=5)
+
+# Update auto-start button state
+update_autostart_button()
 
 # Handle window close button to minimize to tray instead of quitting
 root.protocol('WM_DELETE_WINDOW', hide_window)

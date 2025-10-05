@@ -2,15 +2,19 @@
 
 A lightweight desktop application that runs in your system tray, allowing you to instantly rotate images with global hotkeys - perfect for fixing those sideways photos before sharing them on WhatsApp or other platforms!
 
+![Clipboard Rotator Screenshot](screenshot.png)
+
 ## ✨ Features
 
 - **🖼️ Global Hotkeys**: Rotate images from anywhere with Ctrl+Shift+Arrow keys
 - **🔄 Auto-Copy & Rotate**: Select an image and press the hotkey - it copies and rotates in one action!
 - **📋 System Tray**: Runs minimized in the background, always ready when you need it
+- **🚀 Auto-Start**: Built-in option to start with Windows
 - **⚡ Instant Rotation**: 
   - Rotate Left (90° counterclockwise) - **Ctrl+Shift+Left**
   - Rotate Right (90° clockwise) - **Ctrl+Shift+Right**
   - Rotate 180° - **Ctrl+Shift+Down**
+- **⌨️ Keyboard Shortcuts Info**: View all shortcuts directly in the app
 - **🎨 Automatic Display**: Rotated images open automatically in your default image viewer
 - **💨 Lightweight**: Minimal resource usage, works silently in the background
 
@@ -20,9 +24,12 @@ A lightweight desktop application that runs in your system tray, allowing you to
 
 1. Download the latest `clipboard_rotator.exe` from the releases
 2. Run the executable - it starts minimized in the system tray!
-3. **Select any image** in WhatsApp, browser, or any app
-4. Press **Ctrl+Shift+Left/Right/Down** to instantly copy & rotate
-5. The rotated image opens automatically
+3. **Optional**: Click "Enable Auto-Start" to launch automatically with Windows
+4. **Select any image** in WhatsApp, browser, or any app
+5. Press **Ctrl+Shift+Left/Right/Down** to instantly copy & rotate
+6. The rotated image opens automatically
+
+**Tip**: Right-click the system tray icon to access quick rotation options and show the main window.
 
 **Note**: Run as administrator for global hotkeys to work system-wide.
 
