@@ -91,16 +91,29 @@ def quit_app(icon=None, item=None):
 
 def create_tray_icon():
     """Create system tray icon"""
-    # Create a simple icon image
-    icon_image = PILImage.new('RGB', (64, 64), color='blue')
+    # Try to load icon.ico from multiple possible locations
+    icon_image = None
     
-    # Try to load icon.ico if it exists
-    icon_path = os.path.join(os.path.dirname(__file__), 'icon.ico')
+    # Get the base path (works for both script and PyInstaller executable)
+    if getattr(sys, 'frozen', False):
+        # Running as compiled executable
+        base_path = sys._MEIPASS
+    else:
+        # Running as script
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    
+    icon_path = os.path.join(base_path, 'icon.ico')
+    
+    # Try to load the icon
     if os.path.exists(icon_path):
         try:
             icon_image = PILImage.open(icon_path)
-        except:
-            pass
+        except Exception as e:
+            print(f"Failed to load icon: {e}")
+    
+    # Fallback to a simple colored icon if loading fails
+    if icon_image is None:
+        icon_image = PILImage.new('RGB', (64, 64), color='blue')
     
     menu = pystray.Menu(
         pystray.MenuItem('Show Window', show_window, default=True),
