@@ -6,6 +6,7 @@
 !icon.ico
 !README.md
 !screenshot.png
+!requirements.txt
 
 # Don't ignore .gitignore itself
 !.gitignore

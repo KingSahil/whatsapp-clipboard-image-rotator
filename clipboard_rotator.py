@@ -83,9 +83,9 @@ def show_shortcuts_info():
     info = """Keyboard Shortcuts:
 
 🔄 Rotation Shortcuts:
-• Ctrl+Shift+Left → Rotate Left (90°)
-• Ctrl+Shift+Right → Rotate Right (90°)
-• Ctrl+Shift+Down → Rotate 180°
+• Ctrl+Shift+1 → Rotate Left (90°)
+• Ctrl+Shift+2 → Rotate Right (90°)
+• Ctrl+Shift+3 → Rotate 180°
 
 💡 How it works:
 1. Select or hover over any image
@@ -100,9 +100,15 @@ Note: Run as administrator for best results."""
 
 def copy_and_rotate(angle):
     """Simulate Ctrl+C then rotate the image"""
+    # Release hotkey modifier keys before sending Ctrl+C
+    # (Shift may still be held from the Ctrl+Shift+N hotkey)
+    keyboard.release('shift')
+    keyboard.release('ctrl')
+    time.sleep(0.05)
+
     # Simulate Ctrl+C to copy selected content
     keyboard.send('ctrl+c')
-    
+
     # Wait a moment for clipboard to update
     time.sleep(0.1)
     
@@ -205,9 +211,9 @@ def create_tray_icon():
     
     menu = pystray.Menu(
         pystray.MenuItem('Show Window', show_window, default=True),
-        pystray.MenuItem('Rotate Left (Ctrl+Shift+←)', lambda: copy_and_rotate(90)),
-        pystray.MenuItem('Rotate Right (Ctrl+Shift+→)', lambda: copy_and_rotate(-90)),
-        pystray.MenuItem('Rotate 180° (Ctrl+Shift+↓)', lambda: copy_and_rotate(180)),
+        pystray.MenuItem('Rotate Left (Ctrl+Shift+1)', lambda: copy_and_rotate(90)),
+        pystray.MenuItem('Rotate Right (Ctrl+Shift+2)', lambda: copy_and_rotate(-90)),
+        pystray.MenuItem('Rotate 180° (Ctrl+Shift+3)', lambda: copy_and_rotate(180)),
         pystray.MenuItem('Quit', quit_app)
     )
     
@@ -256,9 +262,9 @@ update_autostart_button()
 root.protocol('WM_DELETE_WINDOW', hide_window)
 
 # Register global hotkeys that auto-copy then rotate
-keyboard.add_hotkey('ctrl+shift+left', lambda: copy_and_rotate(90))
-keyboard.add_hotkey('ctrl+shift+right', lambda: copy_and_rotate(-90))
-keyboard.add_hotkey('ctrl+shift+down', lambda: copy_and_rotate(180))
+keyboard.add_hotkey('ctrl+shift+1', lambda: copy_and_rotate(90))
+keyboard.add_hotkey('ctrl+shift+2', lambda: copy_and_rotate(-90))
+keyboard.add_hotkey('ctrl+shift+3', lambda: copy_and_rotate(180))
 
 # Start system tray icon in a separate thread
 tray_thread = threading.Thread(target=create_tray_icon, daemon=True)

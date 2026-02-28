@@ -6,14 +6,14 @@ A lightweight desktop application that runs in your system tray, allowing you to
 
 ## ✨ Features
 
-- **🖼️ Global Hotkeys**: Rotate images from anywhere with Ctrl+Shift+Arrow keys
+- **🖼️ Global Hotkeys**: Rotate images from anywhere with Ctrl+Shift+1/2/3
 - **🔄 Auto-Copy & Rotate**: Select an image and press the hotkey - it copies and rotates in one action!
 - **📋 System Tray**: Runs minimized in the background, always ready when you need it
 - **🚀 Auto-Start**: Built-in option to start with Windows
 - **⚡ Instant Rotation**: 
-  - Rotate Left (90° counterclockwise) - **Ctrl+Shift+Left**
-  - Rotate Right (90° clockwise) - **Ctrl+Shift+Right**
-  - Rotate 180° - **Ctrl+Shift+Down**
+  - Rotate Left (90° counterclockwise) - **Ctrl+Shift+1**
+  - Rotate Right (90° clockwise) - **Ctrl+Shift+2**
+  - Rotate 180° - **Ctrl+Shift+3**
 - **⌨️ Keyboard Shortcuts Info**: View all shortcuts directly in the app
 - **🎨 Automatic Display**: Rotated images open automatically in your default image viewer
 - **💨 Lightweight**: Minimal resource usage, works silently in the background
@@ -26,7 +26,7 @@ A lightweight desktop application that runs in your system tray, allowing you to
 2. Run the executable - it starts minimized in the system tray!
 3. **Optional**: Click "Enable Auto-Start" to launch automatically with Windows
 4. **Select any image** in WhatsApp, browser, or any app
-5. Press **Ctrl+Shift+Left/Right/Down** to instantly copy & rotate
+5. Press **Ctrl+Shift+1/2/3** to instantly copy & rotate
 6. The rotated image opens automatically
 
 **Tip**: Right-click the system tray icon to access quick rotation options and show the main window.
@@ -81,9 +81,9 @@ python clipboard_rotator.py
 
 The app registers **global hotkeys** that work system-wide:
 
-- **Ctrl+Shift+Left** → Rotate Left (90° counterclockwise)
-- **Ctrl+Shift+Right** → Rotate Right (90° clockwise)
-- **Ctrl+Shift+Down** → Rotate 180°
+- **Ctrl+Shift+1** → Rotate Left (90° counterclockwise)
+- **Ctrl+Shift+2** → Rotate Right (90° clockwise)
+- **Ctrl+Shift+3** → Rotate 180°
 
 💡 **Pro Tip**: Just select/hover over an image and press the hotkey - it automatically copies and rotates!
 
@@ -94,7 +94,7 @@ The app registers **global hotkeys** that work system-wide:
 1. **Start the app**: It will run minimized in your system tray
 2. **Find an image**: In WhatsApp, browser, file explorer, etc.
 3. **Select the image** (hover over it or click it)
-4. **Press Ctrl+Shift+Arrow** to instantly copy & rotate
+4. **Press Ctrl+Shift+1/2/3** to instantly copy & rotate
 5. **View result**: The rotated image opens automatically
 
 ### Method 2: Manual Copy + GUI
@@ -185,7 +185,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🎮 Usage Tips
 
-- **WhatsApp Web**: Select an image, press Ctrl+Shift+Left/Right to rotate before sending
+- **WhatsApp Web**: Select an image, press Ctrl+Shift+1/2 to rotate before sending
 - **Screenshots**: Capture with Win+Shift+S, then immediately rotate with hotkeys
 - **File Explorer**: Select an image file and use hotkeys to quickly preview rotated version
 - **Keep it running**: The app uses minimal resources in the tray - perfect for keeping it on all the time!
