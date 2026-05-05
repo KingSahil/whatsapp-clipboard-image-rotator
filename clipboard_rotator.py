@@ -33,7 +33,7 @@ def get_config_path():
 def load_shortcuts():
     """Load shortcuts from config file, falling back to defaults."""
     try:
-        with open(get_config_path(), 'r') as f:
+        with open(get_config_path(), 'r', encoding='utf-8') as f:
             data = json.load(f)
         # Ensure all keys exist
         shortcuts = dict(DEFAULT_SHORTCUTS)
@@ -45,13 +45,16 @@ def load_shortcuts():
 def save_shortcuts_to_file(shortcuts):
     """Persist shortcuts to config file."""
     try:
-        with open(get_config_path(), 'w') as f:
+        with open(get_config_path(), 'w', encoding='utf-8') as f:
             json.dump(shortcuts, f, indent=2)
     except Exception as e:
         messagebox.showerror("Error", f"Failed to save shortcuts:\n{str(e)}")
 
 # Active shortcuts (mutable dict used everywhere)
 shortcuts = load_shortcuts()
+
+# Handles for our registered hotkeys (so we only remove our own hooks)
+_hotkey_handles = []
 
 # ---------------------------------------------------------------------------
 # Auto-start helpers
@@ -164,8 +167,13 @@ def open_shortcut_settings():
                 def capture():
                     try:
                         hotkey = keyboard.read_hotkey(suppress=False)
-                    except Exception:
+                    except Exception as exc:
                         hotkey = shortcuts[k]
+                        root.after(0, lambda: messagebox.showwarning(
+                            "Record Failed",
+                            f"Could not record hotkey: {exc}\nKeeping the existing shortcut.",
+                            parent=dialog,
+                        ))
                     root.after(0, lambda: _update_entry(e, hotkey))
 
                 threading.Thread(target=capture, daemon=True).start()
@@ -226,11 +234,18 @@ Note: Run as administrator for best results."""
 # ---------------------------------------------------------------------------
 
 def register_hotkeys():
-    """Unregister all hotkeys and re-register from the current shortcuts dict."""
-    keyboard.unhook_all()
-    keyboard.add_hotkey(shortcuts['left'],  lambda: copy_and_rotate(90))
-    keyboard.add_hotkey(shortcuts['right'], lambda: copy_and_rotate(-90))
-    keyboard.add_hotkey(shortcuts['180'],   lambda: copy_and_rotate(180))
+    """Remove our previously registered hotkeys and re-register from the current shortcuts dict."""
+    global _hotkey_handles
+    for handle in _hotkey_handles:
+        try:
+            keyboard.remove_hotkey(handle)
+        except Exception:
+            pass
+    _hotkey_handles = [
+        keyboard.add_hotkey(shortcuts['left'],  lambda: copy_and_rotate(90)),
+        keyboard.add_hotkey(shortcuts['right'], lambda: copy_and_rotate(-90)),
+        keyboard.add_hotkey(shortcuts['180'],   lambda: copy_and_rotate(180)),
+    ]
 
 # ---------------------------------------------------------------------------
 # Image rotation
@@ -307,7 +322,11 @@ def hide_window():
 
 def quit_app(icon=None, item=None):
     """Quit the application"""
-    keyboard.unhook_all()
+    for handle in _hotkey_handles:
+        try:
+            keyboard.remove_hotkey(handle)
+        except Exception:
+            pass
     if icon:
         icon.stop()
     root.quit()
